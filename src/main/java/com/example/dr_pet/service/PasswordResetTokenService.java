@@ -15,10 +15,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
+
 import java.util.UUID;
 
 @Service
+@Transactional
 public class PasswordResetTokenService {
     @Autowired
     private AccountRepo accountRepo;
@@ -41,6 +42,7 @@ public class PasswordResetTokenService {
 
     @Value("${app.reset-password.token.expiration-minutes:30}")
     private long tokenExpirationMinutes;
+
 
     @Transactional
     public void createPasswordResetTokenAndSendEmail(String email) {
@@ -78,18 +80,19 @@ public class PasswordResetTokenService {
         mailSender.send(message);
     }
 
+    @Transactional
     public Account validatePasswordResetToken(String token) {
-        Optional<PasswordResetToken> prtOpt = passwordResetTokenRepo.findByToken(token);
-        if (prtOpt.isEmpty()) {
-            throw new RuntimeException("Token không hợp lệ");
-        }
-        PasswordResetToken prt = prtOpt.get();
-        if (prt.getExpiryDate().isBefore(LocalDateTime.now())) {
-            passwordResetTokenRepo.delete(prt);
+        System.out.println(token);
+        PasswordResetToken prtOpt = passwordResetTokenRepo.findByToken(token).orElseThrow(()-> new RuntimeException("Ko tim thay token"));
+        System.out.println(passwordResetTokenRepo.findByToken(token));
+        if (prtOpt.getExpiryDate().isBefore(LocalDateTime.now())) {
+            passwordResetTokenRepo.delete(prtOpt);
             throw new RuntimeException("Token đã hết hạn");
         }
-        return prt.getAccount();
+        return prtOpt.getAccount();
     }
+
+
 
     @Transactional
     public void resetPassword(String token, String newPassword) {

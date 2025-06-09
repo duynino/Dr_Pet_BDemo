@@ -18,7 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
-@RequestMapping("/auth/")
+@RequestMapping("/auth")
 @RestController
 public class AccountsController {
 
@@ -113,7 +113,7 @@ public class AccountsController {
 
 
     @PostMapping("/forgotPassword")
-    public ResponseEntity<?> fogotPassword(@Valid @RequestBody ForgotPassworđRequest fogotPasswordRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errMsg = bindingResult.getFieldErrors().stream()
                     .map(err -> err.getField() + ": " + err.getDefaultMessage())
@@ -124,7 +124,7 @@ public class AccountsController {
                     .body(errMsg);
         }
         try {
-            passwordResetTokenService.createPasswordResetTokenAndSendEmail(fogotPasswordRequest.getEmail());
+            passwordResetTokenService.createPasswordResetTokenAndSendEmail(forgotPasswordRequest.getEmail());
             return ResponseEntity.ok("Đã gửi email đặt lại mật khẩu (nếu email tồn tại trong hệ thống).");
         } catch (RuntimeException ex) {
             return ResponseEntity
@@ -133,6 +133,8 @@ public class AccountsController {
         }
 
     }
+
+
 
     @PutMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(
@@ -150,8 +152,8 @@ public class AccountsController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(errMsg);
         }
-
         try {
+
             passwordResetTokenService.resetPassword(
                     token,
                     resetRequest.getNewPassword()

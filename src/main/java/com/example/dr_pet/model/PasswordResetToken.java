@@ -23,7 +23,7 @@ public class PasswordResetToken {
     private LocalDateTime expiryDate;
 
     @ManyToOne
-    @JoinColumn(name = "accounts")
+    @JoinColumn(name = "accountID")
     private Account account;
 
 }
