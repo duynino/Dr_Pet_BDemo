@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface VacLogRepo extends JpaRepository<VacLog, Long >{
     Optional<VacLog> findVacLogByVacLogId(Long id);
     List<VacLog> findVacLogByPet(Pet pet);
+    List<VacLog> findVacLogByPetAndIsActiveTrue(Pet pet);
+    Optional<VacLog> findVacLogByVacLogIdAndIsActiveTrue(Long id);
 }

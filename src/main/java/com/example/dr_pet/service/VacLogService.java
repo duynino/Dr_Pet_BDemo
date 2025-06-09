@@ -50,28 +50,27 @@ public class VacLogService {
     }
 
     public List<VacLogResponse> getAllVacLogsByPet(Long petId) {
-        List<VacLog> vacLogs = vacLogRepo.findVacLogByPet(petRepo.findById(petId).orElseThrow(()-> new RuntimeException("Pet not found")));
+        List<VacLog> vacLogs = vacLogRepo.findVacLogByPetAndIsActiveTrue(petRepo.findById(petId).orElseThrow(()-> new RuntimeException("Pet not found")));
         return vacLogs.stream().map(this::mapToVacLogResponse).collect(Collectors.toList());
     }
 
     public void deleteVacLog(Long vacLogId) {
-        VacLog vacLog = vacLogRepo.findById(vacLogId)
-                .orElseThrow(() -> new RuntimeException("VacLog not found"));
-        vacLogRepo.delete(vacLog);
+        VacLog vacLog = vacLogRepo.findVacLogByVacLogIdAndIsActiveTrue(vacLogId).orElseThrow(()-> new RuntimeException("VacLog not found"));
+        vacLog.setActive(false);
+        vacLogRepo.save(vacLog);
     }
 
 
+    //update id
     public VacLogResponse updateVacLog(Long vacLogId, VacLogRequest request) {
         VacLog vacLog = vacLogRepo.findById(vacLogId)
                 .orElseThrow(() -> new RuntimeException("VacLog not found"));
-
         vacLog.setName(request.getName());
         vacLog.setType(request.getType());
         vacLog.setDescription(request.getDescription());
         vacLog.setVacDate(request.getVacDate());
         vacLog.setUpdateDate(LocalDate.now());
         vacLogRepo.save(vacLog);
-
         return mapToVacLogResponse(vacLog);
     }
 

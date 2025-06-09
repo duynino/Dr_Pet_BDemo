@@ -60,7 +60,7 @@ public class VacLogController {
 
 
     //Delete
-    @DeleteMapping("/delete/{vacLogId}")
+    @PutMapping("/delete/{vacLogId}")
     public ResponseEntity<?> deleteVacLog(@PathVariable Long vacLogId) {
         try {
             vacLogService.deleteVacLog(vacLogId);
@@ -82,11 +82,5 @@ public class VacLogController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
-
-
-
-
-
-
 
 }

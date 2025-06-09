@@ -14,4 +14,11 @@ public interface PetRepo extends JpaRepository<Pet, Long> {
     Optional<Pet> findByName(String name);
     List<Pet> findByNameContaining(String name);
     List<Pet> findByAccount(Account account);
+
+    // Tìm tất cả Pet của một Account mà isActive = true
+    List<Pet> findByAccountAndIsActiveTrue(Account account);
+
+    // Tìm 1 Pet theo petID mà isActive = true
+    Optional<Pet> findByPetIDAndIsActiveTrue(Long petID);
+
 }

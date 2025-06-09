@@ -57,21 +57,21 @@ public class PetService {
     }
 
     public PetResponse getPet(Long petID) {
-        Pet pet = petRepo.findById(petID).orElseThrow(()->new RuntimeException("Pet not found"));
+        Pet pet = petRepo.findByPetIDAndIsActiveTrue(petID).orElseThrow(()->new RuntimeException("Pet not found"));
         return mapToPetResponse(pet);
     }
 
     //list all pet in account
     public List<PetResponse> getAllPetsByAccount(String username) {
         Account owner = accountRepo.findByUsername(username).orElseThrow(()->new RuntimeException("Account not found"));
-        List<Pet> pets = petRepo.findByAccount(owner);
+        List<Pet> pets = petRepo.findByAccountAndIsActiveTrue(owner);
         return pets.stream().map(this::mapToPetResponse).collect(Collectors.toList());
     }
 
 
     //update Pet
     public PetResponse updatePet(Long petID,PetRequest petRequest) {
-        Pet pet = petRepo.findById(petID).orElseThrow(()->new RuntimeException("Pet not found"));
+        Pet pet = petRepo.findByPetIDAndIsActiveTrue(petID).orElseThrow(()->new RuntimeException("Pet not found"));
         pet.setName(petRequest.getName());
         pet.setGender(petRequest.getGender());
         pet.setBirthDate(petRequest.getBirthDate());
@@ -86,8 +86,8 @@ public class PetService {
 
     //delete pet by id
     public void deletePet(Long petID) {
-        petRepo.deleteById(petID);
-
+        Pet pet = petRepo.findByPetIDAndIsActiveTrue(petID).orElseThrow(()->new RuntimeException("Pet not found"));
+        pet.setActive(false);
     }
 
 

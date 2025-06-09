@@ -33,7 +33,7 @@ public class DiseaseLogService {
     }
 
     public List<DiseaseLogResponse> getAllDiseaseOfPet(Long petId){
-        List<DiseaseLog> DiseaseList = diseaseLogRepo.findDiseaseLogByPet(petRepo.findById(petId).orElseThrow(()->new RuntimeException("Pet not found")));
+        List<DiseaseLog> DiseaseList = diseaseLogRepo.findDiseaseLogByPetAndIsActiveTrue(petRepo.findById(petId).orElseThrow(()->new RuntimeException("Pet not found")));
         return DiseaseList.stream().map(this::mapToDiseaseLogResponse).collect(Collectors.toList());
     }
 
@@ -43,7 +43,7 @@ public class DiseaseLogService {
 
     public void addDisease(Long petId, DiseaseRequest request){
         DiseaseLog diseaseLog = new DiseaseLog();
-        diseaseLog.setPet(petRepo.findById(petId).orElseThrow(()->new RuntimeException("Pet not found")));
+        diseaseLog.setPet(petRepo.findByPetIDAndIsActiveTrue(petId).orElseThrow(()->new RuntimeException("Pet not found")));
         diseaseLog.setDescription(request.getDescription());
         diseaseLog.setName(request.getName());
         diseaseLog.setStarDate(request.getStarDate());
@@ -54,28 +54,20 @@ public class DiseaseLogService {
 
 
     public void deleteDisease(Long diseaseId){
-        diseaseLogRepo.deleteById(diseaseId);
+        DiseaseLog diseaseLog = diseaseLogRepo.findByDiseaseLogIdAndIsActiveTrue(diseaseId).orElseThrow(() -> new RuntimeException("DiseaseLog not found"));
+        diseaseLog.setActive(false);
+        diseaseLogRepo.save(diseaseLog);
     }
 
 
     public DiseaseLogResponse updateDisease(Long diseaseId, DiseaseRequest request) {
-        DiseaseLog diseaseLog = diseaseLogRepo.findById(diseaseId)
+        DiseaseLog diseaseLog = diseaseLogRepo.findByDiseaseLogIdAndIsActiveTrue(diseaseId)
                 .orElseThrow(() -> new RuntimeException("Disease log not found"));
-
         diseaseLog.setName(request.getName());
         diseaseLog.setDescription(request.getDescription());
         diseaseLog.setStarDate(request.getStarDate());
         diseaseLog.setEndDate(request.getEndDate());
-
         diseaseLogRepo.save(diseaseLog);
         return mapToDiseaseLogResponse(diseaseLog);
     }
-
-
-
-
-
-
-
-
 }

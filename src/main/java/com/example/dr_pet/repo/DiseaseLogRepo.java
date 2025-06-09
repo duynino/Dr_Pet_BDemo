@@ -11,4 +11,11 @@ import java.util.Optional;
 public interface DiseaseLogRepo extends JpaRepository< DiseaseLog, Long> {
     Optional<DiseaseLog> findByDiseaseLogId(Long diseaseLogId);
     List<DiseaseLog> findDiseaseLogByPet( Pet pet );
+
+    //List all disease in one pet
+    List<DiseaseLog> findDiseaseLogByPetAndIsActiveTrue( Pet pet );
+
+    Optional<DiseaseLog> findByDiseaseLogIdAndIsActiveTrue(Long diseaseLogId);
+
+
 }

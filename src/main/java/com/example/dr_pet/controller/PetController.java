@@ -86,7 +86,7 @@ public class PetController {
 
 
     //delete pet
-    @DeleteMapping("delete/{id}")
+    @PutMapping("delete/{id}")
     public ResponseEntity<?> deletePet(@PathVariable Long id) {
         petService.deletePet(id);
         return ResponseEntity.status(HttpStatus.OK).body("Delete pet ok");

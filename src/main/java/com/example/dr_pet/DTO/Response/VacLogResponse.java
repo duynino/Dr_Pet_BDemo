@@ -1,9 +1,6 @@
 package com.example.dr_pet.DTO.Response;
 
 import com.example.dr_pet.model.Pet;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +19,4 @@ public class VacLogResponse {
     private LocalDate vacDate;
     private String notes;
     private Pet pet;
-
 }
