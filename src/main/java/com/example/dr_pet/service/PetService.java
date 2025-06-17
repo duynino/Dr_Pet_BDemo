@@ -6,6 +6,7 @@ import com.example.dr_pet.model.Account;
 import com.example.dr_pet.model.Pet;
 import com.example.dr_pet.repo.AccountRepo;
 import com.example.dr_pet.repo.PetRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class PetService {
 
 

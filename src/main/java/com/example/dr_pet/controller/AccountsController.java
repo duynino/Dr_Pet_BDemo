@@ -173,6 +173,44 @@ public class AccountsController {
         }
     }
 
+
+    //account detail
+    @GetMapping("/account")
+    public ResponseEntity<?> getAccount(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        AccountResponse account = accountsService.getAccount(userPrincipal.getUsername());
+        return ResponseEntity.ok(account);
+    }
+
+    //update account
+    @PutMapping("update/account")
+    public ResponseEntity<?> updateAccount(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody UpdateAccountRequest updateAccountRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMsg = bindingResult.getFieldErrors().stream()
+                    .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                    .reduce((a, b) -> a + "; " + b)
+                    .orElse("Dữ liệu không hợp lệ");
+            return ResponseEntity.badRequest().body(errorMsg);
+        }
+
+        try {
+            accountsService.updateAccount(userPrincipal.getUsername(), updateAccountRequest);
+            return ResponseEntity.ok("Update successful");
+        }
+        catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("update failed");
+        }
+    }
+
+    //delete
+    @PostMapping("/delete/account")
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            accountsService.deleteAccount(userPrincipal.getUsername());
+            return ResponseEntity.ok("Delete successful");
+        }catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Delete failed");
+        }
+    }
 }
 
 

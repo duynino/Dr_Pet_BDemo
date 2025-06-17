@@ -6,6 +6,7 @@ import com.example.dr_pet.DTO.Response.DiseaseLogResponse;
 import com.example.dr_pet.model.DiseaseLog;
 import com.example.dr_pet.repo.DiseaseLogRepo;
 import com.example.dr_pet.repo.PetRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class DiseaseLogService {
 
     @Autowired
@@ -51,6 +53,7 @@ public class DiseaseLogService {
         diseaseLog.setActive(true);
         diseaseLogRepo.save(diseaseLog);
     }
+
 
 
     public void deleteDisease(Long diseaseId){

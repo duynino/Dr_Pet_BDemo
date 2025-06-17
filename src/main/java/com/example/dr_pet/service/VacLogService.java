@@ -7,6 +7,7 @@ import com.example.dr_pet.model.Pet;
 import com.example.dr_pet.model.VacLog;
 import com.example.dr_pet.repo.PetRepo;
 import com.example.dr_pet.repo.VacLogRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class VacLogService {
 
     @Autowired

@@ -11,11 +11,16 @@ import java.util.Optional;
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
     Optional<Product> findByName(String name);
-    Optional<Product> findById(long id);
 
     List<Product> findByNameContainingIgnoreCase(String name);
 
     List<Product> findByCategory(Category category);
+
+    Optional<Product> findByProductIDAndIsActiveTrue(Long productID);
+    // Tìm tất cả sản phẩm của một Category mà isActive = true
+    List<Product> findByCategoryAndIsActiveTrue(Category category);
+
+    List<Product> findAllByIsActiveTrue();
 
 
 

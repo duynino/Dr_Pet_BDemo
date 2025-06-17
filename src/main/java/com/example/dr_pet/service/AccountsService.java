@@ -4,6 +4,7 @@ package com.example.dr_pet.service;
 import com.example.dr_pet.DTO.Request.ChangePasswordRequest;
 import com.example.dr_pet.DTO.Request.LoginRequest;
 import com.example.dr_pet.DTO.Request.RegisterRequest;
+import com.example.dr_pet.DTO.Request.UpdateAccountRequest;
 import com.example.dr_pet.DTO.Response.AccountResponse;
 import com.example.dr_pet.DTO.Response.LoginResponse;
 import com.example.dr_pet.model.Account;
@@ -22,8 +23,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
+@Transactional
 public class AccountsService {
 
 
@@ -44,6 +47,14 @@ public class AccountsService {
     private AuthenticationManager authManager;
 
     public BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+
+
+    //list all
+    public List<AccountResponse> getAllAccounts(){
+       List<Account> accounts = accountRepo.findAllByIsActiveTrue();
+       return accounts.stream().map(this::mapToAccountResponse).toList();
+    }
 
 
     //register method
@@ -68,7 +79,6 @@ public class AccountsService {
 
 
     //login method
-    @Transactional
     public LoginResponse login(LoginRequest request) {
         try {
             Authentication auth = authManager.authenticate(
@@ -95,9 +105,8 @@ public class AccountsService {
 
 
     //changePassword method
-    @Transactional
     public void changePassword(String username, String oldPassword, String newPassword) {
-        Account  recentAccount = accountRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("Account not found"));
+        Account  recentAccount = accountRepo.findByUsernameAndIsActiveTrue(username).orElseThrow(() -> new RuntimeException("Account not found"));
 
         if (!bCryptPasswordEncoder.matches(oldPassword, recentAccount.getPassword())) {
             throw new RuntimeException("Mật khẩu cũ không đúng");
@@ -107,7 +116,31 @@ public class AccountsService {
         accountRepo.save(recentAccount);
     }
 
+    //getAccount method
+    public AccountResponse getAccount(String username) {
+        Account account = accountRepo.findByUsernameAndIsActiveTrue(username).orElseThrow(() -> new RuntimeException("Account not found"));
+        return mapToAccountResponse(account);
+    }
 
+    //deleteAccount method
+    public void deleteAccount(String username){
+        Account account = accountRepo.findByUsernameAndIsActiveTrue(username).orElseThrow(() -> new RuntimeException("Account not found"));
+        account.setIsActive(false);
+        accountRepo.save(account);
+    }
+
+
+    //updateAccount method
+    public AccountResponse updateAccount(String username, UpdateAccountRequest   request){
+        Account account = accountRepo.findByUsernameAndIsActiveTrue(username).orElseThrow(() -> new RuntimeException("Account not found"));
+        account.setFirstName(request.getFirstName());
+        account.setLastName(request.getLastName());
+        account.setPhoneNumber(request.getPhoneNumber());
+        account.setAddress(request.getAddress());
+        account.setUpdateTime(LocalDate.now());
+        accountRepo.save(account);
+        return mapToAccountResponse(account);
+    }
 
     private AccountResponse mapToAccountResponse(Account account) {
         AccountResponse dto = new AccountResponse();
