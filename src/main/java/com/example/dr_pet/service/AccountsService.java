@@ -95,7 +95,7 @@ public class AccountsService {
         UserDetails userDetails = userDetailService.loadUserByUsername(request.getUsername());
         String token = jwtService.generateToken(userDetails.getUsername());
 
-        Account account = accountRepo.findByUsername(request.getUsername())
+        Account account = accountRepo.findByUsernameAndIsActiveTrue(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
 
         AccountResponse accountResp = mapToAccountResponse(account);
