@@ -22,7 +22,7 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountRepo.findByUsername(username)
+        Account account = accountRepo.findByUsernameAndIsActiveTrue(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new UserPrincipal(account);
     }

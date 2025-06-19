@@ -42,7 +42,7 @@ public class PetService {
 
     //add pet
     public PetResponse addPet(String username,PetRequest petRequest) {
-        Account owner = accountRepo.findByUsername(username).orElseThrow(()->new RuntimeException("Account not found"));
+        Account owner = accountRepo.findByUsernameAndIsActiveTrue(username).orElseThrow(()->new RuntimeException("Account not found"));
         Pet pet = new Pet();
         pet.setAccount(owner);
         pet.setName(petRequest.getName());
@@ -65,7 +65,7 @@ public class PetService {
 
     //list all pet in account
     public List<PetResponse> getAllPetsByAccount(String username) {
-        Account owner = accountRepo.findByUsername(username).orElseThrow(()->new RuntimeException("Account not found"));
+        Account owner = accountRepo.findByUsernameAndIsActiveTrue(username).orElseThrow(()->new RuntimeException("Account not found"));
         List<Pet> pets = petRepo.findByAccountAndIsActiveTrue(owner);
         return pets.stream().map(this::mapToPetResponse).collect(Collectors.toList());
     }
