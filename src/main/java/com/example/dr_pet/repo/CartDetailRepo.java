@@ -9,9 +9,6 @@ import java.util.List;
 
 @Repository
 public interface CartDetailRepo extends JpaRepository<CartDetail, Long> {
-
+    List<CartDetail> findByCartAndProduct_ProductID(Cart cart, Long productID);
     List<CartDetail> findCartDetailByCart(Cart cart);
-
-
-
 }
