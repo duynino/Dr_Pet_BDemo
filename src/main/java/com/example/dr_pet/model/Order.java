@@ -23,16 +23,14 @@ public class Order {
     private Account account;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "voucherID")
     private Voucher voucher;
 
     private Float totalPrice;
     private Float discountPrice;
-
     private String orderStatus;
     private LocalDate createDate;
     private LocalDate updateDate;
-
     private boolean isActive;
-
+    private String note;
 }

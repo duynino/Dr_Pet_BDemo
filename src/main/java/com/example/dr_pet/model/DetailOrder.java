@@ -13,12 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "DetailOrders")
 public class DetailOrder {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long detailOrderID;
-
 
     @ManyToOne
     @JoinColumn(name = "productID")
@@ -30,6 +27,4 @@ public class DetailOrder {
 
     private int quantity;
     private Float price;
-
-
 }
